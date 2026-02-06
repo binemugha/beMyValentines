@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine? 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 50%, #f48fb1 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Floating hearts background */
+        .hearts-bg {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .floating-heart {
+            position: absolute;
+            opacity: 0.3;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translateY(-100px) rotate(180deg);
+                opacity: 0.6;
+            }
+        }
+
+        /* Main container */
+        .container {
+            text-align: center;
+            z-index: 10;
+            padding: 2rem;
+        }
+
+        .main-heart {
+            font-size: 8rem;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: #c2185b;
+            margin: 1.5rem 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: #e91e63;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        /* Buttons container */
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            min-height: 150px;
+            position: relative;
+        }
+
+        @media (min-width: 640px) {
+            .buttons-container {
+                flex-direction: row;
+                gap: 2rem;
+            }
+        }
+
+        .btn {
+            padding: 1rem 3rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, #ec407a, #e91e63);
+            color: white;
+        }
+
+        .btn-yes:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
+            background: linear-gradient(135deg, #e91e63, #c2185b);
+        }
+
+        .btn-no {
+            background: #e0e0e0;
+            color: #666;
+            position: absolute;
+            transition: transform 0.2s ease, background 0.3s ease;
+        }
+
+        .btn-no:hover {
+            background: #bdbdbd;
+        }
+
+        .hint {
+            margin-top: 2rem;
+            color: #e91e63;
+            opacity: 0.6;
+            font-style: italic;
+        }
+
+        /* Success screen */
+        .success-screen {
+            display: none;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .success-screen.show {
+            display: block;
+        }
+
+        .question-screen {
+            display: block;
+        }
+
+        .question-screen.hide {
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .success-heart {
+            font-size: 8rem;
+            animation: bounce 1s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-30px);
+            }
+        }
+
+        .success-title {
+            font-size: 3.5rem;
+            color: white;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
+            margin: 1rem 0;
+        }
+
+        .success-subtitle {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+        }
+
+        .celebration-emojis {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            font-size: 3rem;
+        }
+
+        .celebration-emojis span {
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        .celebration-emojis span:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .celebration-emojis span:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .celebration-emojis span:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+
+        .celebration-emojis span:nth-child(5) {
+            animation-delay: 0.4s;
+        }
+
+        body.success-mode {
+            background: linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #f06292 100%);
+        }
+
+        @media (max-width: 640px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .main-heart {
+                font-size: 5rem;
+            }
+
+            .subtitle {
+                font-size: 1.2rem;
+            }
+
+            .btn {
+                padding: 0.8rem 2rem;
+                font-size: 1.2rem;
+            }
+
+            .success-title {
+                font-size: 2.5rem;
+            }
+
+            .success-heart {
+                font-size: 5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating hearts background -->
+    <div class="hearts-bg" id="heartsBackground"></div>
+
+    <div class="container">
+        <!-- Question Screen -->
+        <div class="question-screen" id="questionScreen">
+            <div class="main-heart">💕</div>
+            <h1>Will You Be My Valentine?</h1>
+            <p class="subtitle">My dearest wife, you mean the world to me 💖</p>
+            
+            <div class="buttons-container" id="buttonsContainer">
+                <button class="btn btn-yes" id="yesBtn">Yes! 💖</button>
+                <button class="btn btn-no" id="noBtn">No 😢</button>
+            </div>
+            
+            <p class="hint">(Hint: There's only one right answer 😉)</p>
+        </div>
+
+        <!-- Success Screen -->
+        <div class="success-screen" id="successScreen">
+            <div class="success-heart">💖</div>
+            <h1 class="success-title">Yay! I Love You! 💕</h1>
+            <p class="success-subtitle">You've made me the happiest person! 🥰</p>
+            <div class="celebration-emojis">
+                <span>💐</span>
+                <span>🌹</span>
+                <span>💝</span>
+                <span>🌹</span>
+                <span>💐</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Create floating hearts background
+        function createFloatingHearts() {
+            const container = document.getElementById('heartsBackground');
+            const hearts = ['❤️', '💕', '💖', '💗', '💓'];
+            
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.top = Math.random() * 100 + '%';
+                heart.style.fontSize = (Math.random() * 30 + 20) + 'px';
+                heart.style.animationDelay = (Math.random() * 5) + 's';
+                heart.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                container.appendChild(heart);
+            }
+        }
+
+        // Initialize
+        createFloatingHearts();
+
+        // Get elements
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const buttonsContainer = document.getElementById('buttonsContainer');
+        const questionScreen = document.getElementById('questionScreen');
+        const successScreen = document.getElementById('successScreen');
+
+        // Move the No button away from cursor
+        function moveNoButton() {
+            const containerRect = buttonsContainer.getBoundingClientRect();
+            const buttonRect = noBtn.getBoundingClientRect();
+            
+            // Calculate available space
+            const maxX = (containerRect.width - buttonRect.width) / 2;
+            const maxY = 100; // Limit vertical movement
+            
+            // Generate random position
+            let newX = (Math.random() - 0.5) * maxX * 2;
+            let newY = (Math.random() - 0.5) * maxY * 2;
+            
+            // Make sure it moves significantly
+            if (Math.abs(newX) < 50) newX = newX > 0 ? 100 : -100;
+            if (Math.abs(newY) < 30) newY = newY > 0 ? 60 : -60;
+            
+            noBtn.style.transform = `translate(${newX}px, ${newY}px)`;
+        }
+
+        // Event listeners for No button
+        noBtn.addEventListener('mouseenter', moveNoButton);
+        noBtn.addEventListener('mouseover', moveNoButton);
+        noBtn.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            moveNoButton();
+        });
+        noBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            moveNoButton();
+        });
+
+        // Yes button click - show success screen
+        yesBtn.addEventListener('click', function() {
+            document.body.classList.add('success-mode');
+            questionScreen.classList.add('hide');
+            successScreen.classList.add('show');
+        });
+    </script>
+</body>
+</html>
